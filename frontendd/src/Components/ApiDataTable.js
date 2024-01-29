@@ -1,17 +1,16 @@
-// Import necessary dependencies
+// ApiDataTable.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid } from '@mui/material';
+import PieChart from './PieChart';
+import Graph from './Graph';
 
-// Define the Table component
 const ApiDataTable = () => {
-  // State to store the data from the API
   const [data, setData] = useState([]);
 
-  // Effect to fetch data from the API when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Replace 'your-api-endpoint' with the actual API: endpoint
         const response = await axios.get('http://localhost:3001/api/table');
         setData(response.data);
       } catch (error) {
@@ -20,39 +19,51 @@ const ApiDataTable = () => {
     };
 
     fetchData();
-  }, []); // Empty dependency array ensures that the effect runs only once
+  }, []);
 
-  // Table headers
   const columns = [
     { header: 'ID', accessor: 'id' },
     { header: 'Name', accessor: 'name' },
     { header: 'Quantity', accessor: 'quantity' },
-    { header: 'Price' , accessor: 'price'}
-  
+    { header: 'Price', accessor: 'price' },
   ];
 
   return (
-    <div>
-      <h2>API Data Table</h2>
-      <table>
-        <thead>
-          <tr>
-            {columns.map((column) => (
-              <th key={column.accessor}>{column.header}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row) => (
-            <tr key={row.id}>
-              {columns.map((column) => (
-                <td key={column.accessor}>{row[column.accessor]}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Grid container style={{ height: '100%' }}>
+      {/* Main content */}
+      <Grid item xs={12} style={{ padding: '20px' }}>
+        <Grid container direction="column" spacing={2}>
+          {/* Statboard at the top */}
+          
+
+          {/* Table */}
+          <Grid item>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {columns.map(function (column) {
+                      return <TableCell key={column.accessor}>{column.header}</TableCell>;
+                    })}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data.map(function (row) {
+                    return (
+                      <TableRow key={row.id}>
+                        {columns.map(function (column) {
+                          return <TableCell key={column.accessor}>{row[column.accessor]}</TableCell>;
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
